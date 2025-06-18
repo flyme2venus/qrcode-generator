@@ -1086,6 +1086,43 @@
             max-height: 60px;
             overflow-y: auto;
         }
+        #gm-qrcode-float-btn-enhanced {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2147483647;
+            background: #333;
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 8px 0 0 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0.85;
+            user-select: none;
+            transition: background 0.2s, opacity 0.2s;
+        }
+        #gm-qrcode-float-btn-enhanced:hover {
+            background: #ff4d4d;
+            opacity: 1;
+        }
+    `)
+
+  // 移除深色模式适配样式，始终黑底白图标
+  GM_addStyle(`
+      #gm-qrcode-float-btn-enhanced {
+        background: #222 !important;
+        color: #fff !important;
+      }
+      #gm-qrcode-float-btn-enhanced .gm-qrcode-float-btn-icon path {
+        fill: #fff !important;
+      }
+      #gm-qrcode-float-btn-enhanced:hover {
+        background: #ff4d4d !important;
+        color: #fff !important;
+      }
     `)
 
   // 获取选中的文本
@@ -1238,6 +1275,60 @@
     document.addEventListener('keydown', keyHandler)
   }
 
+  // 添加右侧中部按钮
+  function addQRCodeButton() {
+    if (document.getElementById('gm-qrcode-float-btn-enhanced')) return
+    const btn = document.createElement('div')
+    btn.id = 'gm-qrcode-float-btn-enhanced'
+    btn.innerHTML = `
+      <svg class="gm-qrcode-float-btn-icon" width="24" height="24" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <path d="M384 928 192 928c-52.928 0-96-43.072-96-96l0-192c0-52.928 43.072-96 96-96l192 0c52.928 0 96 43.072 96 96l0 192C480 884.928 436.928 928 384 928zM192 608c-17.632 0-32 14.336-32 32l0 192c0 17.664 14.368 32 32 32l192 0c17.632 0 32-14.336 32-32l0-192c0-17.664-14.368-32-32-32L192 608zM736 896c-17.696 0-32-14.304-32-32l0-64c0-17.696 14.304-32 32-32s32 14.304 32 32l0 64C768 881.696 753.696 896 736 896zM864 896c-17.696 0-32-14.304-32-32l0-96c0-17.696 14.304-32 32-32s32 14.304 32 32l0 96C896 881.696 881.696 896 864 896zM864 672c-17.696 0-32-14.304-32-32l0-64c0-17.696 14.304-32 32-32s32 14.304 32 32l0 64C896 657.696 881.696 672 864 672zM736 736c-17.696 0-32-14.304-32-32l0-128c0-17.696 14.304-32 32-32s32 14.304 32 32l0 128C768 721.696 753.696 736 736 736zM608 896c-17.696 0-32-14.304-32-32l0-128c0-17.696 14.304-32 32-32s32 14.304 32 32l0 128C640 881.696 625.696 896 608 896zM608 640c-17.696 0-32-14.304-32-32l0-32c0-17.696 14.304-32 32-32s32 14.304 32 32l0 32C640 625.696 625.696 640 608 640zM320 800 256 800c-17.664 0-32-14.304-32-32l0-64c0-17.696 14.336-32 32-32l64 0c17.664 0 32 14.304 32 32l0 64C352 785.696 337.664 800 320 800zM384 480 192 480c-52.928 0-96-43.072-96-96L96 192c0-52.928 43.072-96 96-96l192 0c52.928 0 96 43.072 96 96l0 192C480 436.928 436.928 480 384 480zM192 160C174.368 160 160 174.368 160 192l0 192c0 17.632 14.368 32 32 32l192 0c17.632 0 32-14.368 32-32L416 192c0-17.632-14.368-32-32-32L192 160zM320 352 256 352c-17.664 0-32-14.336-32-32L224 256c0-17.664 14.336-32 32-32l64 0c17.664 0 32 14.336 32 32l0 64C352 337.664 337.664 352 320 352zM832 480l-192 0c-52.928 0-96-43.072-96-96L544 192c0-52.928 43.072-96 96-96l192 0c52.928 0 96 43.072 96 96l0 192C928 436.928 884.928 480 832 480zM640 160c-17.664 0-32 14.368-32 32l0 192c0 17.632 14.336 32 32 32l192 0c17.664 0 32-14.368 32-32L864 192c0-17.632-14.336-32-32-32L640 160zM768 352l-64 0c-17.696 0-32-14.336-32-32L672 256c0-17.664 14.304-32 32-32l64 0c17.696 0 32 14.336 32 32l0 64C800 337.664 785.696 352 768 352z" fill="currentColor"></path>
+      </svg>
+    `
+    btn.title = '点击生成二维码 (同 Shift+Alt+Q)'
+    btn.style.position = 'fixed'
+    btn.style.right = '0'
+    btn.style.top = '50%'
+    btn.style.transform = 'translateY(-50%)'
+    btn.style.zIndex = '2147483647'
+    btn.style.background = '#333'
+    btn.style.color = '#fff'
+    btn.style.padding = '12px 18px'
+    btn.style.borderRadius = '8px 0 0 8px'
+    btn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)'
+    btn.style.fontSize = '16px'
+    btn.style.fontWeight = 'bold'
+    btn.style.cursor = 'pointer'
+    btn.style.opacity = '0.85'
+    btn.style.userSelect = 'none'
+    btn.style.transition = 'background 0.2s, opacity 0.2s'
+    btn.onmouseenter = () => {
+      btn.style.background = '#ff4d4d'
+      btn.style.opacity = '1'
+    }
+    btn.onmouseleave = () => {
+      btn.style.background = '#333'
+      btn.style.opacity = '0.85'
+    }
+    btn.onclick = function (e) {
+      e.preventDefault()
+      e.stopPropagation()
+      const selectedText = getSelectedText().trim()
+      if (selectedText) {
+        createQRCode(selectedText, '选中内容二维码')
+      } else {
+        createQRCode(window.location.href, '当前网址二维码')
+      }
+    }
+    document.body.appendChild(btn)
+  }
+  // 页面加载后添加按钮
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addQRCodeButton)
+  } else {
+    addQRCodeButton()
+  }
+
   // 键盘事件监听
   document.addEventListener('keydown', function (e) {
     // 检查是否按下了 Shift + Alt + Q
@@ -1256,6 +1347,109 @@
       }
     }
   })
+
+  // 监听选区变化，动态调整二维码按钮位置和样式
+  function updateQRCodeButtonPosition() {
+    const btn = document.getElementById('gm-qrcode-float-btn-enhanced')
+    if (!btn) return
+    const sel = window.getSelection()
+    const selectedText = sel && sel.toString().trim()
+    if (selectedText) {
+      // 有选中内容，按钮跟随选区最后一行最后一个字，若该节点被吸顶/吸底则按钮也吸附
+      let rect = null,
+        anchorNode = null,
+        anchorOffset = null,
+        anchorElem = null
+      if (sel.rangeCount > 0) {
+        const range = sel.getRangeAt(0)
+        anchorNode = range.endContainer
+        anchorOffset = range.endOffset
+
+        // 尝试将 range 收缩到末尾一个字符
+        let endRange = range.cloneRange()
+        if (!endRange.collapsed && anchorNode.nodeType === 3 && anchorOffset > 0) {
+          endRange.setStart(anchorNode, anchorOffset - 1)
+        }
+        rect = endRange.getBoundingClientRect()
+        // 若末尾字符不可用（如选中的是图片或空白），则回退用原range
+        if ((!rect || rect.width === 0) && range.getBoundingClientRect) {
+          rect = range.getBoundingClientRect()
+        }
+        // 获取锚定元素（吸顶/吸底元素）
+        if (anchorNode.nodeType === 3) {
+          anchorElem = anchorNode.parentElement
+        } else if (anchorNode.nodeType === 1) {
+          anchorElem = anchorNode
+        }
+      }
+      // 检查锚定元素是否吸附（fixed/sticky）
+      let isFixedOrSticky = false,
+        anchorRect = null
+      if (anchorElem) {
+        const style = window.getComputedStyle(anchorElem)
+        if (style.position === 'fixed' || style.position === 'sticky') {
+          isFixedOrSticky = true
+          anchorRect = anchorElem.getBoundingClientRect()
+        }
+      }
+      if (rect && rect.width >= 0 && rect.height >= 0) {
+        if (isFixedOrSticky && anchorRect) {
+          // 吸顶/吸底时，按钮用fixed定位，锚定在元素右下角
+          btn.style.position = 'fixed'
+          btn.style.left = Math.min(anchorRect.right + 8, window.innerWidth - 36) + 'px'
+          btn.style.top = Math.min(anchorRect.bottom + 8, window.innerHeight - 36) + 'px'
+        } else {
+          // 正常跟随选区
+          btn.style.position = 'absolute'
+          const scrollX = window.scrollX || window.pageXOffset
+          const scrollY = window.scrollY || window.pageYOffset
+          btn.style.left = Math.min(rect.right + 8 + scrollX, scrollX + window.innerWidth - 36) + 'px'
+          btn.style.top = Math.min(rect.bottom + 8 + scrollY, scrollY + window.innerHeight - 36) + 'px'
+        }
+        btn.style.right = ''
+        btn.style.transform = 'none'
+        btn.style.width = '32px'
+        btn.style.height = '32px'
+        btn.style.padding = '0'
+        btn.style.borderRadius = '8px'
+        btn.style.display = 'flex'
+        btn.style.alignItems = 'center'
+        btn.style.justifyContent = 'center'
+        btn.style.fontSize = '18px'
+        btn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.18)'
+        btn.style.opacity = '1'
+        btn.style.background = '#222'
+      }
+    } else {
+      // 无选中内容，恢复原样
+      btn.style.position = 'fixed'
+      btn.style.right = '0'
+      btn.style.top = '50%'
+      btn.style.left = ''
+      btn.style.transform = 'translateY(-50%)'
+      btn.style.width = ''
+      btn.style.height = ''
+      btn.style.padding = '12px 18px'
+      btn.style.borderRadius = '8px 0 0 8px'
+      btn.style.display = ''
+      btn.style.alignItems = ''
+      btn.style.justifyContent = ''
+      btn.style.fontSize = '16px'
+      btn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)'
+      btn.style.opacity = '0.85'
+      btn.style.background = ''
+    }
+  }
+  document.addEventListener('selectionchange', updateQRCodeButtonPosition)
+  // 页面加载后也要初始化一次
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateQRCodeButtonPosition)
+  } else {
+    updateQRCodeButtonPosition()
+  }
+  // 监听滚动和窗口变化，保证按钮实时跟随
+  window.addEventListener('scroll', updateQRCodeButtonPosition, true)
+  window.addEventListener('resize', updateQRCodeButtonPosition, true)
 
   console.log('二维码生成器已加载，按 Shift+Alt+Q 生成二维码')
 })()
